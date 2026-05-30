@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IRONFORGE — Forge Your Legacy</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --red:#E8190A;--red2:#FF3B2F;--gold:#F5A200;--gold2:#FFD000;
+  --dark:#080808;--dark2:#0F0F0F;--dark3:#161616;
+  --text:#F0EDE8;--muted:#888;--border:#222;
+  --font-display:'Bebas Neue',sans-serif;
+  --font-body:'Rajdhani',sans-serif;
+  --font-tech:'Orbitron',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--dark);color:var(--text);font-family:var(--font-body);overflow-x:hidden;cursor:none}
+
+/* CURSOR */
+.cursor{position:fixed;width:12px;height:12px;background:var(--red);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .1s,background .2s;mix-blend-mode:screen}
+.cursor-ring{position:fixed;width:40px;height:40px;border:1px solid rgba(232,25,10,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .15s ease,width .3s,height .3s,opacity .3s}
+body:hover .cursor{opacity:1}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.2rem 3rem;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(8,8,8,.95),transparent)}
+.nav-logo{font-family:var(--font-display);font-size:2rem;letter-spacing:.15em;color:var(--text);text-decoration:none}
+.nav-logo span{color:var(--red)}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{font-family:var(--font-body);font-weight:600;font-size:1rem;letter-spacing:.12em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color .25s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--red);transition:width .3s}
+.nav-links a:hover{color:var(--text)}
+.nav-links a:hover::after{width:100%}
+.nav-cta{background:var(--red);color:#fff;font-family:var(--font-body);font-weight:700;font-size:.9rem;letter-spacing:.15em;text-transform:uppercase;border:none;padding:.7rem 1.8rem;cursor:none;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:background .25s,transform .2s}
+.nav-cta:hover{background:var(--red2);transform:scale(1.04)}
+
+/* HERO CANVAS */
+/* HERO CANVAS */
+#hero{
+    position:relative;
+    width:100vw;
+    height:100vh;
+    overflow:hidden;
+}
+
+#three-canvas{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+}
+
+.hero-overlay{
+    position:absolute;
+    inset:0;
+    background:radial-gradient(
+        ellipse at center,
+        transparent 30%,
+        rgba(8,8,8,.7) 100%
+    );
+}
+
+.hero-content{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:40px 8vw 0;
+    z-index:2;
+}
+
+.hero-eyebrow{
+    font-family:var(--font-tech);
+    font-size:.75rem;
+    letter-spacing:.4em;
+    color:var(--red);
+    text-transform:uppercase;
+    margin-bottom:1.5rem;
+    opacity:0;
+    animation:fadeUp .8s .3s forwards;
+}
+
+.hero-title{
+    font-family:var(--font-display);
+    font-size:clamp(5rem,10vw,10rem);
+    line-height:1.05;
+    color:var(--text);
+    margin-bottom:1.5rem;
+    padding-top:40px;
+    opacity:0;
+    animation:fadeUp .8s .5s forwards;
+}
+
+.hero-title .accent{
+    color:var(--red);
+    display:block;
+}
+
+.hero-sub{
+    font-family:var(--font-body);
+    font-size:1.25rem;
+    font-weight:500;
+    color:var(--muted);
+    max-width:480px;
+    line-height:1.6;
+    margin-bottom:3rem;
+    opacity:0;
+    animation:fadeUp .8s .7s forwards;
+}
+
+.hero-actions{
+    display:flex;
+    gap:1.5rem;
+    align-items:center;
+    opacity:0;
+    animation:fadeUp .8s .9s forwards;
+}
+
+.btn-primary{
+    background:var(--red);
+    color:#fff;
+    font-family:var(--font-body);
+    font-weight:700;
+    font-size:1rem;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+    border:none;
+    padding:1rem 2.5rem;
+    cursor:none;
+    clip-path:polygon(
+        12px 0%,
+        100% 0%,
+        calc(100% - 12px) 100%,
+        0% 100%
+    );
+    transition:background .25s,transform .2s;
+    text-decoration:none;
+    display:inline-block;
+}
+
+.btn-primary:hover{
+    background:var(--red2);
+    transform:translateY(-2px);
+}
+
+.btn-ghost{
+    color:var(--text);
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:1rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    text-decoration:none;
+    border-bottom:1px solid var(--border);
+    padding-bottom:4px;
+    transition:border-color .25s,color .25s;
+}
+
+.btn-ghost:hover{
+    border-color:var(--red);
+    color:var(--red);
+}
+
+.hero-scroll{
+    position:absolute;
+    bottom:2.5rem;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:.8rem;
+    z-index:2;
+    opacity:0;
+    animation:fadeUp .8s 1.2s forwards;
+}
+
+.scroll-line{
+    width:1px;
+    height:60px;
+    background:linear-gradient(
+        to bottom,
+        var(--red),
+        transparent
+    );
+    animation:scrollPulse 2s infinite;
+}
+
+.scroll-label{
+    font-family:var(--font-tech);
+    font-size:.6rem;
+    letter-spacing:.3em;
+    color:var(--muted);
+    text-transform:uppercase;
+}
+/* STATS TICKER */
+.ticker{background:var(--red);padding:.6rem 0;overflow:hidden;position:relative;z-index:3}
+.ticker-inner{display:flex;gap:4rem;animation:ticker 30s linear infinite;white-space:nowrap;width:max-content}
+.ticker-item{font-family:var(--font-display);font-size:1.1rem;letter-spacing:.2em;color:#fff;display:flex;align-items:center;gap:1rem}
+.ticker-sep{color:rgba(255,255,255,.3);font-size:1.5rem}
+
+/* SECTION BASE */
+section{padding:8rem 8vw}
+.section-label{font-family:var(--font-tech);font-size:.7rem;letter-spacing:.4em;color:var(--red);text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:1rem}
+.section-label::before{content:'';display:inline-block;width:40px;height:1px;background:var(--red)}
+.section-title{font-family:var(--font-display);font-size:clamp(3rem,6vw,6rem);line-height:.95;color:var(--text);margin-bottom:2rem}
+
+/* PROGRAMS */
+#programs{background:var(--dark2)}
+.programs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5px;margin-top:5rem}
+.program-card{background:var(--dark3);padding:3rem 2.5rem;position:relative;overflow:hidden;transition:transform .4s cubic-bezier(.22,.61,.36,1);cursor:none}
+.program-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--red) 0%,transparent 60%);opacity:0;transition:opacity .4s}
+.program-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .4s}
+.program-card:hover{transform:translateY(-8px)}
+.program-card:hover::before{opacity:.06}
+.program-card:hover::after{transform:scaleX(1)}
+.program-num{font-family:var(--font-display);font-size:5rem;color:var(--border);line-height:1;margin-bottom:1.5rem;transition:color .4s}
+.program-card:hover .program-num{color:var(--red)}
+.program-name{font-family:var(--font-display);font-size:2rem;letter-spacing:.05em;color:var(--text);margin-bottom:1rem}
+.program-desc{font-family:var(--font-body);font-size:1rem;font-weight:400;color:var(--muted);line-height:1.7;margin-bottom:2rem}
+.program-tag{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--font-tech);font-size:.65rem;letter-spacing:.2em;color:var(--red);text-transform:uppercase;border:1px solid rgba(232,25,10,.3);padding:.35rem .8rem}
+
+/* TRAINERS */
+#trainers{background:var(--dark)}
+.trainers-intro{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:end;margin-bottom:5rem}
+.trainers-text p{font-family:var(--font-body);font-size:1.1rem;font-weight:400;color:var(--muted);line-height:1.8;max-width:420px}
+.trainers-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5px}
+.trainer-card{position:relative;aspect-ratio:3/4;background:var(--dark3);overflow:hidden;cursor:none}
+.trainer-bg{position:absolute;inset:0;background:linear-gradient(135deg,#1a1a1a,#0f0f0f);display:flex;align-items:center;justify-content:center}
+.trainer-avatar{font-family:var(--font-display);font-size:6rem;color:var(--border);transition:transform .5s,color .4s}
+.trainer-card:hover .trainer-avatar{transform:scale(1.1);color:var(--red)}
+.trainer-info{position:absolute;bottom:0;left:0;right:0;padding:2rem 1.5rem;background:linear-gradient(to top,rgba(8,8,8,.98) 60%,transparent);transform:translateY(30%);transition:transform .4s cubic-bezier(.22,.61,.36,1)}
+.trainer-card:hover .trainer-info{transform:translateY(0)}
+.trainer-name{font-family:var(--font-display);font-size:1.6rem;letter-spacing:.05em;color:var(--text);margin-bottom:.3rem}
+.trainer-specialty{font-family:var(--font-tech);font-size:.65rem;letter-spacing:.2em;color:var(--red);text-transform:uppercase;margin-bottom:1rem}
+.trainer-stats{display:flex;gap:1.5rem}
+.t-stat span{display:block;font-family:var(--font-display);font-size:1.4rem;color:var(--text)}
+.t-stat small{font-family:var(--font-body);font-size:.75rem;color:var(--muted)}
+
+/* 3D DUMBBELL SECTION */
+#forge{background:var(--dark2);position:relative;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:5rem;padding:8rem 8vw}
+#dumbbell-canvas{width:100%;height:500px}
+.forge-content{}
+.forge-features{margin-top:3rem;display:flex;flex-direction:column;gap:1.5rem}
+.forge-feature{display:flex;gap:1.5rem;align-items:flex-start;padding:1.5rem;border:1px solid var(--border);position:relative;overflow:hidden;transition:border-color .3s}
+.forge-feature::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red);transform:scaleY(0);transform-origin:top;transition:transform .3s}
+.forge-feature:hover{border-color:rgba(232,25,10,.3)}
+.forge-feature:hover::before{transform:scaleY(1)}
+.feature-icon{font-family:var(--font-display);font-size:2.5rem;color:var(--red);line-height:1;min-width:40px}
+.feature-text h4{font-family:var(--font-body);font-weight:700;font-size:1.1rem;letter-spacing:.05em;text-transform:uppercase;color:var(--text);margin-bottom:.4rem}
+.feature-text p{font-family:var(--font-body);font-size:.95rem;color:var(--muted);line-height:1.6}
+
+/* STATS */
+#stats{background:var(--dark);padding:6rem 8vw}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5px}
+.stat-block{background:var(--dark3);padding:3.5rem 2rem;text-align:center;position:relative;overflow:hidden}
+.stat-block::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--red),transparent)}
+.stat-num{font-family:var(--font-display);font-size:5rem;color:var(--text);line-height:1;display:block}
+.stat-num .unit{color:var(--red);font-size:3rem}
+.stat-label{font-family:var(--font-tech);font-size:.65rem;letter-spacing:.25em;color:var(--muted);text-transform:uppercase;margin-top:.8rem;display:block}
+
+/* PRICING */
+#pricing{background:var(--dark2)}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5px;margin-top:5rem}
+.price-card{background:var(--dark3);padding:3.5rem 2.5rem;position:relative;overflow:hidden;transition:transform .4s}
+.price-card.featured{background:#0f0000;border:1px solid rgba(232,25,10,.4)}
+.price-card:hover{transform:translateY(-6px)}
+.price-badge{display:inline-block;background:var(--red);color:#fff;font-family:var(--font-tech);font-size:.65rem;letter-spacing:.2em;padding:.3rem .9rem;text-transform:uppercase;margin-bottom:1.5rem}
+.price-name{font-family:var(--font-display);font-size:2.5rem;letter-spacing:.05em;color:var(--text);margin-bottom:.5rem}
+.price-amount{font-family:var(--font-display);font-size:5rem;color:var(--text);line-height:1;margin-bottom:.3rem}
+.price-amount sup{font-size:2rem;color:var(--red);vertical-align:top;margin-top:1rem}
+.price-period{font-family:var(--font-body);font-size:.9rem;color:var(--muted);margin-bottom:2.5rem;padding-bottom:2.5rem;border-bottom:1px solid var(--border)}
+.price-features{list-style:none;display:flex;flex-direction:column;gap:1rem;margin-bottom:3rem}
+.price-features li{font-family:var(--font-body);font-size:1rem;color:var(--muted);display:flex;align-items:center;gap:.8rem}
+.price-features li::before{content:'→';color:var(--red);font-size:1.1rem}
+.price-features li.active{color:var(--text)}
+.price-btn{width:100%;background:transparent;border:1px solid var(--border);color:var(--text);font-family:var(--font-body);font-weight:700;font-size:.95rem;letter-spacing:.15em;text-transform:uppercase;padding:1rem;cursor:none;transition:all .3s}
+.price-btn:hover,.price-card.featured .price-btn{background:var(--red);border-color:var(--red)}
+
+/* TESTIMONIALS */
+#testimonials{background:var(--dark);overflow:hidden}
+.testimonials-track{display:flex;gap:2rem;animation:slideTracks 40s linear infinite;width:max-content;margin-top:5rem}
+.testimonial-card{background:var(--dark3);border:1px solid var(--border);padding:2.5rem;width:380px;flex-shrink:0;position:relative}
+.testimonial-card::before{content:'"';font-family:var(--font-display);font-size:8rem;color:var(--red);opacity:.15;position:absolute;top:-1rem;left:1.5rem;line-height:1}
+.testimonial-text{font-family:var(--font-body);font-size:1.05rem;color:var(--muted);line-height:1.8;margin-bottom:2rem;position:relative;z-index:1}
+.testimonial-author{display:flex;align-items:center;gap:1rem}
+.author-avatar{width:44px;height:44px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.2rem;color:#fff}
+.author-name{font-family:var(--font-body);font-weight:700;font-size:1rem;color:var(--text)}
+.author-role{font-family:var(--font-tech);font-size:.6rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
+.stars{color:var(--gold);font-size:.9rem;margin-bottom:.3rem}
+
+/* CTA */
+#cta{background:var(--dark2);text-align:center;padding:10rem 8vw;position:relative;overflow:hidden}
+#cta::before{content:'FORGE';font-family:var(--font-display);font-size:35vw;color:rgba(255,255,255,.02);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;white-space:nowrap;z-index:0}
+.cta-content{position:relative;z-index:1}
+.cta-title{font-family:var(--font-display);font-size:clamp(3rem,8vw,8rem);line-height:.9;color:var(--text);margin-bottom:2rem}
+.cta-title .line-red{color:var(--red)}
+.cta-sub{font-family:var(--font-body);font-size:1.2rem;color:var(--muted);max-width:500px;margin:0 auto 3.5rem;line-height:1.7}
+.cta-actions{display:flex;gap:1.5rem;justify-content:center;align-items:center}
+
+/* FOOTER */
+footer{background:var(--dark);border-top:1px solid var(--border);padding:4rem 8vw 3rem}
+.footer-top{display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:3rem;margin-bottom:4rem}
+.footer-brand .nav-logo{font-size:2.5rem;display:block;margin-bottom:1rem}
+.footer-brand p{font-family:var(--font-body);font-size:.95rem;color:var(--muted);line-height:1.7;max-width:260px}
+.footer-col h5{font-family:var(--font-tech);font-size:.65rem;letter-spacing:.25em;color:var(--red);text-transform:uppercase;margin-bottom:1.5rem}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:.8rem}
+.footer-col ul li a{font-family:var(--font-body);font-size:.95rem;color:var(--muted);text-decoration:none;transition:color .25s}
+.footer-col ul li a:hover{color:var(--text)}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:2rem}
+.footer-copy{font-family:var(--font-body);font-size:.85rem;color:var(--muted)}
+.footer-socials{display:flex;gap:1rem}
+.social-btn{width:36px;height:36px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);font-family:var(--font-display);font-size:.8rem;text-decoration:none;transition:all .25s}
+.social-btn:hover{border-color:var(--red);color:var(--red)}
+
+/* SCROLL ANIMATIONS */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.22,.61,.36,1),transform .8s cubic-bezier(.22,.61,.36,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-40px);transition:opacity .8s cubic-bezier(.22,.61,.36,1),transform .8s cubic-bezier(.22,.61,.36,1)}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+
+/* KEYFRAMES */
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scrollPulse{0%,100%{opacity:1;transform:scaleY(1)}50%{opacity:.4;transform:scaleY(.6)}}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes slideTracks{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* SCANLINE EFFECT */
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);pointer-events:none;z-index:9990}
+
+/* RED GLOW ACCENTS */
+.glow{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(232,25,10,.12),transparent 70%);pointer-events:none}
+
+@media(max-width:900px){
+  .programs-grid,.trainers-grid,.pricing-grid,.stats-grid{grid-template-columns:1fr}
+  #forge{grid-template-columns:1fr}
+  .trainers-intro{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr 1fr}
+  nav{padding:1rem 1.5rem}
+  .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">IRON<span>FORGE</span></a>
+  <ul class="nav-links">
+    <li><a href="#programs">Programs</a></li>
+    <li><a href="#trainers">Trainers</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#testimonials">Results</a></li>
+  </ul>
+  <button class="nav-cta">Join Now</button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="three-canvas"></canvas>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Est. 2019 — Elite Performance Training</p>
+    <h1 class="hero-title">
+      FORGE<br>
+      <span class="accent">YOUR</span>
+      LEGACY
+    </h1>
+    <p class="hero-sub">Where iron meets willpower. Train with the best, become the best. No excuses. Only results.</p>
+    <div class="hero-actions">
+      <a href="#pricing" class="btn-primary">Start Training</a>
+      <a href="#programs" class="btn-ghost">Explore Programs →</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span class="scroll-label">Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">3,500+ Members <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">12 Expert Trainers <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">98% Retention Rate <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">24/7 Access <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">7 Locations <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Elite Equipment <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">3,500+ Members <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">12 Expert Trainers <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">98% Retention Rate <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">24/7 Access <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">7 Locations <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Elite Equipment <span class="ticker-sep">✦</span></span>
+  </div>
+</div>
+
+<!-- PROGRAMS -->
+<section id="programs">
+  <div class="section-label reveal">Our Programs</div>
+  <h2 class="section-title reveal">TRAIN<br>HARDER</h2>
+  <div class="programs-grid">
+    <div class="program-card reveal">
+      <div class="program-num">01</div>
+      <h3 class="program-name">Strength & Power</h3>
+      <p class="program-desc">Build raw, functional strength through progressive overload and compound movements. Deadlifts, squats, and bench — the holy trinity.</p>
+      <span class="program-tag">⚡ 5x/week</span>
+    </div>
+    <div class="program-card reveal">
+      <div class="program-num">02</div>
+      <h3 class="program-name">HIIT & Conditioning</h3>
+      <p class="program-desc">Explosive intervals designed to shred fat and spike your VO₂ max. Burn more in 45 minutes than you would in 2 hours of cardio.</p>
+      <span class="program-tag">🔥 4x/week</span>
+    </div>
+    <div class="program-card reveal">
+      <div class="program-num">03</div>
+      <h3 class="program-name">Elite Athletics</h3>
+      <p class="program-desc">Sport-specific training for competitors. Speed, agility, power — every session brings you closer to your peak performance ceiling.</p>
+      <span class="program-tag">🏆 6x/week</span>
+    </div>
+    <div class="program-card reveal">
+      <div class="program-num">04</div>
+      <h3 class="program-name">Body Recomposition</h3>
+      <p class="program-desc">The science of losing fat while building muscle simultaneously. Precision nutrition + training protocols tailored to your body type.</p>
+      <span class="program-tag">💪 3x/week</span>
+    </div>
+    <div class="program-card reveal">
+      <div class="program-num">05</div>
+      <h3 class="program-name">Mobility & Recovery</h3>
+      <p class="program-desc">The missing piece most athletes ignore. Deep tissue work, joint health, and movement quality that keeps you injury-free for life.</p>
+      <span class="program-tag">🌿 2x/week</span>
+    </div>
+    <div class="program-card reveal">
+      <div class="program-num">06</div>
+      <h3 class="program-name">1-on-1 Coaching</h3>
+      <p class="program-desc">Complete access to an elite personal trainer. Fully customized program, real-time form correction, and accountability that drives results.</p>
+      <span class="program-tag">👤 Custom</span>
+    </div>
+  </div>
+</section>
+
+<!-- 3D DUMBBELL / FORGE SECTION -->
+<section id="forge">
+  <canvas id="dumbbell-canvas"></canvas>
+  <div class="forge-content">
+    <div class="section-label reveal-left">World-Class Facility</div>
+    <h2 class="section-title reveal-left">BUILT FOR<br>CHAMPIONS</h2>
+    <div class="forge-features">
+      <div class="forge-feature reveal-left">
+        <div class="feature-icon">⚙</div>
+        <div class="feature-text">
+          <h4>Olympic Equipment</h4>
+          <p>Hammer Strength, Life Fitness, Rogue — the same brands used by professional athletes and Olympic training centers.</p>
+        </div>
+      </div>
+      <div class="forge-feature reveal-left">
+        <div class="feature-icon">🧬</div>
+        <div class="feature-text">
+          <h4>Performance Analytics</h4>
+          <p>Real-time biometric tracking. Heart rate zones, power output, recovery metrics — every session logged and analyzed.</p>
+        </div>
+      </div>
+      <div class="forge-feature reveal-left">
+        <div class="feature-icon">🔥</div>
+        <div class="feature-text">
+          <h4>Recovery Suite</h4>
+          <p>Ice baths, infrared saunas, compression therapy, and sports massage — everything you need to come back stronger.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="stats-grid">
+    <div class="stat-block reveal">
+      <span class="stat-num"><span class="count" data-target="3500">0</span><span class="unit">+</span></span>
+      <span class="stat-label">Active Members</span>
+    </div>
+    <div class="stat-block reveal">
+      <span class="stat-num"><span class="count" data-target="98">0</span><span class="unit">%</span></span>
+      <span class="stat-label">Retention Rate</span>
+    </div>
+    <div class="stat-block reveal">
+      <span class="stat-num"><span class="count" data-target="12">0</span><span class="unit">+</span></span>
+      <span class="stat-label">Expert Trainers</span>
+    </div>
+    <div class="stat-block reveal">
+      <span class="stat-num"><span class="count" data-target="7">0</span><span class="unit">K</span></span>
+      <span class="stat-label">Transformations</span>
+    </div>
+  </div>
+</section>
+
+<!-- TRAINERS -->
+<section id="trainers">
+  <div class="trainers-intro">
+    <div>
+      <div class="section-label reveal">Elite Coaches</div>
+      <h2 class="section-title reveal">MEET YOUR<br>MENTORS</h2>
+    </div>
+    <div class="trainers-text reveal">
+      <p>Every trainer at IRONFORGE is handpicked from the top 1% of fitness professionals. Former athletes, certified specialists, relentless motivators.</p>
+    </div>
+  </div>
+  <div class="trainers-grid">
+    <div class="trainer-card reveal">
+      <div class="trainer-bg"><div class="trainer-avatar">MR</div></div>
+      <div class="trainer-info">
+        <div class="trainer-name">Marcus Reid</div>
+        <div class="trainer-specialty">Strength & Power</div>
+        <div class="trainer-stats">
+          <div class="t-stat"><span>12yr</span><small>Experience</small></div>
+          <div class="t-stat"><span>340+</span><small>Clients</small></div>
+        </div>
+      </div>
+    </div>
+    <div class="trainer-card reveal">
+      <div class="trainer-bg"><div class="trainer-avatar">SK</div></div>
+      <div class="trainer-info">
+        <div class="trainer-name">Sara Kovacs</div>
+        <div class="trainer-specialty">HIIT & Endurance</div>
+        <div class="trainer-stats">
+          <div class="t-stat"><span>9yr</span><small>Experience</small></div>
+          <div class="t-stat"><span>280+</span><small>Clients</small></div>
+        </div>
+      </div>
+    </div>
+    <div class="trainer-card reveal">
+      <div class="trainer-bg"><div class="trainer-avatar">JT</div></div>
+      <div class="trainer-info">
+        <div class="trainer-name">Jordan Torres</div>
+        <div class="trainer-specialty">Athletic Performance</div>
+        <div class="trainer-stats">
+          <div class="t-stat"><span>8yr</span><small>Experience</small></div>
+          <div class="t-stat"><span>190+</span><small>Clients</small></div>
+        </div>
+      </div>
+    </div>
+    <div class="trainer-card reveal">
+      <div class="trainer-bg"><div class="trainer-avatar">AL</div></div>
+      <div class="trainer-info">
+        <div class="trainer-name">Anya Liu</div>
+        <div class="trainer-specialty">Nutrition & Recomp</div>
+        <div class="trainer-stats">
+          <div class="t-stat"><span>11yr</span><small>Experience</small></div>
+          <div class="t-stat"><span>420+</span><small>Clients</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-label reveal">Membership Plans</div>
+  <h2 class="section-title reveal">INVEST IN<br>YOURSELF</h2>
+  <div class="pricing-grid">
+    <div class="price-card reveal">
+      <div class="price-name">Starter</div>
+      <div class="price-amount"><sup>₹</sup>1,999</div>
+      <div class="price-period">per month</div>
+      <ul class="price-features">
+        <li class="active">Gym floor access</li>
+        <li class="active">Group classes (4/month)</li>
+        <li class="active">Locker room access</li>
+        <li>Personal training sessions</li>
+        <li>Recovery suite</li>
+        <li>Nutrition coaching</li>
+      </ul>
+      <button class="price-btn">Get Started</button>
+    </div>
+    <div class="price-card featured reveal">
+      <div class="price-badge">Most Popular</div>
+      <div class="price-name">Elite</div>
+      <div class="price-amount"><sup>₹</sup>3,999</div>
+      <div class="price-period">per month</div>
+      <ul class="price-features">
+        <li class="active">24/7 gym access</li>
+        <li class="active">Unlimited group classes</li>
+        <li class="active">4 PT sessions/month</li>
+        <li class="active">Recovery suite access</li>
+        <li class="active">Basic nutrition plan</li>
+        <li>Advanced analytics</li>
+      </ul>
+      <button class="price-btn">Get Started</button>
+    </div>
+    <div class="price-card reveal">
+      <div class="price-name">Champion</div>
+      <div class="price-amount"><sup>₹</sup>7,999</div>
+      <div class="price-period">per month</div>
+      <ul class="price-features">
+        <li class="active">Everything in Elite</li>
+        <li class="active">12 PT sessions/month</li>
+        <li class="active">Custom nutrition coaching</li>
+        <li class="active">Advanced analytics</li>
+        <li class="active">Priority class booking</li>
+        <li class="active">Guest passes (2/month)</li>
+      </ul>
+      <button class="price-btn">Get Started</button>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="section-label reveal">Member Results</div>
+  <h2 class="section-title reveal">REAL PEOPLE<br>REAL RESULTS</h2>
+  <div class="testimonials-track">
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">Lost 22kg in 6 months without feeling like I was killing myself. The trainers here actually care about your progress, not just your subscription.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">RK</div>
+        <div><div class="author-name">Rahul Kumar</div><div class="author-role">Member since 2023</div></div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">From barely squatting bodyweight to competing in powerlifting. IRONFORGE changed my entire relationship with fitness. This is a lifestyle now.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">PS</div>
+        <div><div class="author-name">Priya Sharma</div><div class="author-role">Member since 2022</div></div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">Best investment I've made in my life. The equipment is world-class, trainers are phenomenal, and the community keeps you accountable every single day.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">AV</div>
+        <div><div class="author-name">Arjun Verma</div><div class="author-role">Member since 2021</div></div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">Marcus took me from 0 to running a half marathon in 4 months. The programming is science-backed and the results speak for themselves.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">NM</div>
+        <div><div class="author-name">Neha Mehta</div><div class="author-role">Member since 2024</div></div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">The recovery suite alone is worth the membership. Sauna after every heavy session — my joints have never felt better at 45 years old.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">SR</div>
+        <div><div class="author-name">Sanjay Rao</div><div class="author-role">Member since 2022</div></div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">Lost 22kg in 6 months without feeling like I was killing myself. The trainers here actually care about your progress, not just your subscription.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">RK</div>
+        <div><div class="author-name">Rahul Kumar</div><div class="author-role">Member since 2023</div></div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">From barely squatting bodyweight to competing in powerlifting. IRONFORGE changed my entire relationship with fitness. This is a lifestyle now.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">PS</div>
+        <div><div class="author-name">Priya Sharma</div><div class="author-role">Member since 2022</div></div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">Best investment I've made in my life. The equipment is world-class, trainers are phenomenal, and the community keeps you accountable every single day.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">AV</div>
+        <div><div class="author-name">Arjun Verma</div><div class="author-role">Member since 2021</div></div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">Marcus took me from 0 to running a half marathon in 4 months. The programming is science-backed and the results speak for themselves.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">NM</div>
+        <div><div class="author-name">Neha Mehta</div><div class="author-role">Member since 2024</div></div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">The recovery suite alone is worth the membership. Sauna after every heavy session — my joints have never felt better at 45 years old.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">SR</div>
+        <div><div class="author-name">Sanjay Rao</div><div class="author-role">Member since 2022</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-content">
+    <h2 class="cta-title reveal">YOUR BEST SELF<br><span class="line-red">STARTS TODAY</span></h2>
+    <p class="cta-sub reveal">Stop waiting for the perfect moment. The perfect moment is now. Join 3,500+ members already transforming their lives at IRONFORGE.</p>
+    <div class="cta-actions reveal">
+      <a href="#pricing" class="btn-primary">Claim Free Trial</a>
+      <a href="#programs" class="btn-ghost">View Programs →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo">IRON<span>FORGE</span></a>
+      <p>Where iron meets willpower. Forging champions since 2019 across 7 locations in India.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Programs</h5>
+      <ul>
+        <li><a href="#">Strength & Power</a></li>
+        <li><a href="#">HIIT & Conditioning</a></li>
+        <li><a href="#">Elite Athletics</a></li>
+        <li><a href="#">Body Recomposition</a></li>
+        <li><a href="#">1-on-1 Coaching</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Trainers</a></li>
+        <li><a href="#">Locations</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Blog</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <ul>
+        <li><a href="#">Chennai, Tamil Nadu</a></li>
+        <li><a href="#">hello@ironforge.in</a></li>
+        <li><a href="#">+91 98400 00000</a></li>
+        <li><a href="#">Open 24/7</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2026 IRONFORGE. All rights reserved.</p>
+    <div class="footer-socials">
+      <a href="#" class="social-btn">IG</a>
+      <a href="#" class="social-btn">TW</a>
+      <a href="#" class="social-btn">YT</a>
+      <a href="#" class="social-btn">FB</a>
+    </div>
+  </div>
+</footer>
+
+<!-- THREE.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ===== CURSOR =====
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cursor.style.left=mx+'px';cursor.style.top=my+'px';
+});
+function animRing(){
+  rx+=(mx-rx)*.12;ry+=(my-ry)*.12;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+document.querySelectorAll('a,button,.program-card,.trainer-card,.price-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{
+    cursor.style.transform='translate(-50%,-50%) scale(2.5)';
+    ring.style.width='60px';ring.style.height='60px';ring.style.opacity='.5';
+  });
+  el.addEventListener('mouseleave',()=>{
+    cursor.style.transform='translate(-50%,-50%) scale(1)';
+    ring.style.width='40px';ring.style.height='40px';ring.style.opacity='1';
+  });
+});
+
+// ===== HERO THREE.JS =====
+(function(){
+  const canvas = document.getElementById('three-canvas');
+  const W = canvas.offsetWidth, H = canvas.offsetHeight;
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setSize(W,H);
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.shadowMap.enabled=true;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60,W/H,.1,1000);
+  camera.position.set(0,2,14);
+  camera.lookAt(0,0,0);
+
+  // Lights
+  const ambL = new THREE.AmbientLight(0xffffff,.2);
+  scene.add(ambL);
+  const redL = new THREE.PointLight(0xE8190A,3,20);
+  redL.position.set(-5,5,5);
+  scene.add(redL);
+  const goldL = new THREE.PointLight(0xF5A200,2,20);
+  goldL.position.set(5,3,3);
+  scene.add(goldL);
+  const fillL = new THREE.DirectionalLight(0xffffff,.4);
+  fillL.position.set(0,10,5);
+  scene.add(fillL);
+
+  // Materials
+  const metalMat = new THREE.MeshStandardMaterial({color:0x222222,metalness:.95,roughness:.1});
+  const redMat = new THREE.MeshStandardMaterial({color:0xE8190A,metalness:.7,roughness:.2,emissive:0x440000,emissiveIntensity:.3});
+  const chromeMat = new THREE.MeshStandardMaterial({color:0x888888,metalness:1,roughness:.05});
+
+  // Dumbbell group
+  const db = new THREE.Group();
+
+  // Bar
+  const barGeo = new THREE.CylinderGeometry(.08,.08,6,16);
+  const bar = new THREE.Mesh(barGeo, metalMat);
+  bar.rotation.z = Math.PI/2;
+  db.add(bar);
+
+  // Knurling rings on bar
+  for(let i=-2.5;i<=2.5;i+=.4){
+    const kg = new THREE.CylinderGeometry(.095,.095,.06,12);
+    const kr = new THREE.Mesh(kg, chromeMat);
+    kr.rotation.z=Math.PI/2;
+    kr.position.x=i;
+    db.add(kr);
+  }
+
+  // Plate function
+  function makePlate(x,r1,r2,h,mat){
+    const g = new THREE.CylinderGeometry(r2,r2,h,24);
+    g.translate(0,0,0);
+    const m = new THREE.Mesh(g,mat);
+    m.rotation.z=Math.PI/2;
+    m.position.x=x;
+    db.add(m);
+    // Inner ring hole effect
+    const hg = new THREE.CylinderGeometry(r1,r1,h+.01,24);
+    const hm = new THREE.Mesh(hg, metalMat);
+    hm.rotation.z=Math.PI/2;
+    hm.position.x=x;
+    db.add(hm);
+  }
+
+  // Plates left
+  makePlate(-2.5,.12,.9,.25,redMat);
+  makePlate(-2.15,.12,.75,.25,chromeMat);
+  makePlate(-1.8,.12,.6,.2,redMat);
+  // Plates right
+  makePlate(2.5,.12,.9,.25,redMat);
+  makePlate(2.15,.12,.75,.25,chromeMat);
+  makePlate(1.8,.12,.6,.2,redMat);
+
+  // Collars
+  const cg = new THREE.CylinderGeometry(.13,.13,.3,16);
+  [-1.4,1.4].forEach(x=>{
+    const c=new THREE.Mesh(cg,chromeMat);
+    c.rotation.z=Math.PI/2;c.position.x=x;db.add(c);
+  });
+
+  scene.add(db);
+  db.position.set(0,0,0);
+
+  // Floating particles
+  const partCount=200;
+  const partGeo=new THREE.BufferGeometry();
+  const positions=new Float32Array(partCount*3);
+  for(let i=0;i<partCount;i++){
+    positions[i*3]=(Math.random()-.5)*30;
+    positions[i*3+1]=(Math.random()-.5)*20;
+    positions[i*3+2]=(Math.random()-.5)*20;
+  }
+  partGeo.setAttribute('position',new THREE.BufferAttribute(positions,3));
+  const partMat=new THREE.PointsMaterial({color:0xE8190A,size:.06,transparent:true,opacity:.6});
+  const particles=new THREE.Points(partGeo,partMat);
+  scene.add(particles);
+
+  // Grid floor
+  const gridHelper=new THREE.GridHelper(30,30,0x220000,0x1a0000);
+  gridHelper.position.y=-3;
+  scene.add(gridHelper);
+
+  // Mouse interaction
+  let mouseX=0,mouseY=0;
+  document.addEventListener('mousemove',e=>{
+    mouseX=(e.clientX/window.innerWidth-.5)*2;
+    mouseY=(e.clientY/window.innerHeight-.5)*2;
+  });
+
+  let t=0;
+  function animate(){
+    requestAnimationFrame(animate);
+    t+=.008;
+
+    // Dumbbell rotation and float
+    db.rotation.y=t*.4+mouseX*.5;
+    db.rotation.x=Math.sin(t*.3)*.1+mouseY*.15;
+    db.position.y=Math.sin(t*.6)*.4;
+
+    // Pulsing red light
+    redL.intensity=2.5+Math.sin(t*2)*.8;
+    redL.position.x=-5+Math.sin(t)*.5;
+
+    // Particles drift
+    particles.rotation.y=t*.03;
+    particles.rotation.x=t*.01;
+
+    camera.position.x=mouseX*.5;
+    camera.position.y=2+mouseY*.3;
+    camera.lookAt(0,0,0);
+
+    renderer.render(scene,camera);
+  }
+  animate();
+
+  window.addEventListener('resize',()=>{
+    const w=canvas.offsetWidth,h=canvas.offsetHeight;
+    camera.aspect=w/h;camera.updateProjectionMatrix();
+    renderer.setSize(w,h);
+  });
+})();
+
+// ===== DUMBBELL SHOWCASE THREE.JS =====
+(function(){
+  const canvas = document.getElementById('dumbbell-canvas');
+  const W=canvas.offsetWidth, H=canvas.offsetHeight||500;
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+  renderer.setSize(W,H);
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(45,W/H,.1,100);
+  camera.position.set(0,3,12);
+  camera.lookAt(0,0,0);
+
+  const al=new THREE.AmbientLight(0xffffff,.3);scene.add(al);
+  const rl=new THREE.PointLight(0xE8190A,4,15);rl.position.set(-4,4,4);scene.add(rl);
+  const gl=new THREE.PointLight(0xF5A200,2,12);gl.position.set(4,2,3);scene.add(gl);
+  const wl=new THREE.DirectionalLight(0xffffff,.6);wl.position.set(2,8,5);scene.add(wl);
+
+  const silver=new THREE.MeshStandardMaterial({color:0x1a1a1a,metalness:.98,roughness:.05});
+  const red=new THREE.MeshStandardMaterial({color:0xC81005,metalness:.6,roughness:.3,emissive:0x330000,emissiveIntensity:.4});
+  const gold=new THREE.MeshStandardMaterial({color:0xD4890A,metalness:.85,roughness:.15});
+
+  // Main barbell
+  const group=new THREE.Group();
+  const barG=new THREE.CylinderGeometry(.07,.07,8,20);
+  group.add(new THREE.Mesh(barG,silver));
+
+  // Hex plates (simulate)
+  function hexPlate(x,s,mat){
+    const g=new THREE.CylinderGeometry(s,s,.35,6);
+    const m=new THREE.Mesh(g,mat);
+    m.rotation.z=Math.PI/2;m.position.x=x;group.add(m);
+    // hub
+    const hg=new THREE.CylinderGeometry(.1,.1,.37,12);
+    const hm=new THREE.Mesh(hg,silver);
+    hm.rotation.z=Math.PI/2;hm.position.x=x;group.add(hm);
+  }
+
+  hexPlate(-3,.95,red);hexPlate(-2.5,.75,gold);hexPlate(-2,.55,red);
+  hexPlate(3,.95,red);hexPlate(2.5,.75,gold);hexPlate(2,.55,red);
+
+  // Collars
+  [-1.4,1.4].forEach(x=>{
+    const cg=new THREE.CylinderGeometry(.12,.12,.4,16);
+    const cm=new THREE.Mesh(cg,gold);
+    cm.rotation.z=Math.PI/2;cm.position.x=x;group.add(cm);
+  });
+
+  scene.add(group);
+
+  // Ring orbits
+  const rings=[];
+  [1.4,2,2.6].forEach((r,i)=>{
+    const rg=new THREE.TorusGeometry(r,.015,8,64);
+    const rm=new THREE.MeshStandardMaterial({color:i===1?0xE8190A:0x444444,metalness:.9,roughness:.1,emissive:i===1?0x440000:0,emissiveIntensity:.5});
+    const mesh=new THREE.Mesh(rg,rm);
+    mesh.rotation.x=Math.PI/2;
+    scene.add(mesh);
+    rings.push({mesh,speed:.003+i*.002,offset:i*(Math.PI*2/3)});
+  });
+
+  let t=0;
+  function anim(){
+    requestAnimationFrame(anim);t+=.006;
+    group.rotation.y=t*.3;
+    group.position.y=Math.sin(t*.5)*.3;
+    rings.forEach(r=>{
+      r.mesh.rotation.y=t*r.speed*10+r.offset;
+      r.mesh.rotation.x=Math.PI/2+Math.sin(t*.4+r.offset)*.3;
+    });
+    rl.intensity=3.5+Math.sin(t*1.5)*.8;
+    renderer.render(scene,camera);
+  }
+  anim();
+
+  window.addEventListener('resize',()=>{
+    const w=canvas.offsetWidth,h=canvas.offsetHeight||500;
+    camera.aspect=w/h;camera.updateProjectionMatrix();
+    renderer.setSize(w,h);
+  });
+})();
+
+// ===== SCROLL REVEAL =====
+const revealEls=document.querySelectorAll('.reveal,.reveal-left');
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}
+  });
+},{threshold:.1,rootMargin:'0px 0px -50px 0px'});
+revealEls.forEach(el=>obs.observe(el));
+
+// ===== COUNTER ANIMATION =====
+const counts=document.querySelectorAll('.count');
+const cObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const el=e.target;
+      const target=+el.dataset.target;
+      const dur=1800;const step=16;
+      let current=0;
+      const inc=target/(dur/step);
+      const timer=setInterval(()=>{
+        current=Math.min(current+inc,target);
+        el.textContent=Math.floor(current).toLocaleString();
+        if(current>=target)clearInterval(timer);
+      },step);
+      cObs.unobserve(el);
+    }
+  });
+},{threshold:.5});
+counts.forEach(c=>cObs.observe(c));
+
+// ===== NAV SCROLL =====
+window.addEventListener('scroll',()=>{
+  const nav=document.querySelector('nav');
+  nav.style.background=window.scrollY>80?'rgba(8,8,8,.97)':'linear-gradient(to bottom,rgba(8,8,8,.95),transparent)';
+});
+</script>
+</body>
+</html>
